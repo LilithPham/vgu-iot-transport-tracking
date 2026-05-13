@@ -58,17 +58,17 @@
             document.getElementById('status').innerText = "Cập nhật lúc: " + new Date().toLocaleTimeString();
         }
 
-        // 6. TỰ ĐỘNG CẬP NHẬT: Cứ mỗi 5 giây lấy dữ liệu từ Link Firebase 
-        const FIREBASE_URL = 'https://vgu-transport-iot-default-rtdb.asia-southeast1.firebasedatabase.app/tracking.json';
+        // 6. TỰ ĐỘNG CẬP NHẬT: Cứ mỗi 2 giây lấy dữ liệu từ Link Firebase 
+        // ĐÃ SỬA: Đổi tracking.json thành gps.json để khớp với mạch của Quyên
+        const FIREBASE_URL = 'https://vgu-transport-iot-default-rtdb.asia-southeast1.firebasedatabase.app/gps.json';
 
         function fetchData() {
-            fetch(FIREBASE_URL) 
+            fetch(FIREBASE_URL, { cache: "no-store" }) 
                 .then(response => response.json())
                 .then(data => {
-                    // Chỗ này Thu kiểm tra nếu để dữ liệu trực tiếp trong tracking
-                    // thì dùng data.lat, data.lon nhé.
-                    if (data && data.lat && data.lon) {
-                        updateLocation(data.lat, data.lon);
+                    // ĐÃ SỬA: Đổi data.lon thành data.lng để khớp với tên biến trên Firebase
+                    if (data && data.lat && data.lng) {
+                        updateLocation(data.lat, data.lng);
                     }
                 })
                 .catch(err => {
@@ -77,7 +77,7 @@
                 });
         }
 
-        // Chạy lần đầu tiên và sau đó lặp lại mỗi 5 giây
+        // Chạy lần đầu tiên và sau đó lặp lại mỗi 2 giây
         fetchData();
         setInterval(fetchData, 2000); 
 
